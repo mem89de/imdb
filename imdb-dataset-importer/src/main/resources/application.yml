@@ -1,0 +1,21 @@
+spring:
+  main:
+    banner-mode: "off"
+  datasource:
+    url: jdbc:postgresql://localhost:5432/postgres
+    username: postgres
+    password: example
+    driver-class-name: org.postgresql.Driver
+  batch:
+    jdbc:
+      initialize-schema: always
+logging:
+  level:
+    root: WARN
+    "de.mem89.*": INFO
+
+datasets:
+  titleBasics:
+    file: title.basics.tsv.gz
+    dto_class: de.mem89.imdb.dataset_importer.dto.TitleBasics
+    headers: tconst, titleType, primaryTitle, originalTitle, isAdult, startYear, endYear, runtimeMinutes, genres
