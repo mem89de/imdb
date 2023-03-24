@@ -1,20 +1,15 @@
 package de.mem89.imdb.dataset_importer;
 
 import de.mem89.imdb.dataset_importer.dto.TitleBasics;
-import de.mem89.imdb.dataset_importer.headers.TitleBasicsHeader;
 import de.mem89.imdb.dataset_importer.mapper.TitleBasicsMapper;
 import de.mem89.imdb.dataset_importer.reader.CSVRecordReader;
-import de.mem89.imdb.dataset_importer.writer.StdoutWriter;
+import de.mem89.imdb.dataset_importer.writer.LogWriter;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.csv.CSVFormat;
 import org.apache.commons.csv.CSVRecord;
-import org.apache.commons.csv.QuoteMode;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.batch.core.Job;
 import org.springframework.batch.core.JobExecutionListener;
 import org.springframework.batch.core.Step;
-import org.springframework.batch.core.configuration.annotation.EnableBatchProcessing;
 import org.springframework.batch.core.job.builder.JobBuilder;
 import org.springframework.batch.core.launch.support.RunIdIncrementer;
 import org.springframework.batch.core.repository.JobRepository;
@@ -32,22 +27,24 @@ import java.io.IOException;
 import java.util.zip.GZIPInputStream;
 
 @Configuration
-// @EnableBatchProcessing
 @Slf4j
 public class BatchConfiguration {
 
-    @Value("${datasets.titleBasics.file}")
+    @Value("${app.datasets.titleBasics.file}")
     private String fileInput;
 
-    @Value("${datasets.titleBasics.headers}")
+    @Value("${app.datasets.titleBasics.headers}")
     private String[] headers;
 
-    @Value("${datasets.titleBasics.dto_class}")
+    @Value("${app.datasets.titleBasics.dto_class}")
     private Class titleBasicsClass;
+
+    @Value("${app.chunk_size}")
+    private int chunkSize;
 
     @Bean
     public ItemWriter<TitleBasics> writer() {
-        return new StdoutWriter<>();
+        return new LogWriter<>();
     }
 
     @Bean
@@ -65,7 +62,7 @@ public class BatchConfiguration {
     public Step step1(JobRepository jobRepository, PlatformTransactionManager transactionManager) {
         log.debug("Configuring step 'step1'");
         return new StepBuilder("step1", jobRepository)
-                .<CSVRecord, TitleBasics>chunk(1000)
+                .<CSVRecord, TitleBasics>chunk(chunkSize)
                 .transactionManager(transactionManager)
                 .reader(createReader(fileInput))
                 .processor(new MapperProcessor<CSVRecord, TitleBasics>(new TitleBasicsMapper()))
@@ -86,9 +83,8 @@ public class BatchConfiguration {
 
     private <T extends Enum<T>> CSVFormat getDefaultCSVFormat() {
         return CSVFormat.DEFAULT.builder()
-                .setQuoteMode(QuoteMode.NONE)
-                .setEscape('\\')
                 .setDelimiter('\t')
+                .setQuote(null)
                 .setSkipHeaderRecord(true)
                 .setHeader(headers)
                 .build();
