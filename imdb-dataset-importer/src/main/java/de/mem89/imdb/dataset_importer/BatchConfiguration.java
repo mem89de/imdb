@@ -1,92 +1,89 @@
 package de.mem89.imdb.dataset_importer;
 
-import de.mem89.imdb.dataset_importer.dto.TitleBasics;
+import de.mem89.imdb.dataset_importer.headers.NameBasicsHeader;
+import de.mem89.imdb.dataset_importer.headers.TitleBasicsHeader;
+import de.mem89.imdb.dataset_importer.mapper.NameBasicsMapper;
 import de.mem89.imdb.dataset_importer.mapper.TitleBasicsMapper;
-import de.mem89.imdb.dataset_importer.reader.CSVRecordReader;
-import de.mem89.imdb.dataset_importer.writer.LogWriter;
+import de.mem89.imdb.dataset_importer.reader.DatasetReaderFactory;
 import lombok.extern.slf4j.Slf4j;
-import org.apache.commons.csv.CSVFormat;
-import org.apache.commons.csv.CSVRecord;
 import org.springframework.batch.core.Job;
 import org.springframework.batch.core.JobExecutionListener;
 import org.springframework.batch.core.Step;
 import org.springframework.batch.core.job.builder.JobBuilder;
+import org.springframework.batch.core.job.builder.SimpleJobBuilder;
 import org.springframework.batch.core.launch.support.RunIdIncrementer;
 import org.springframework.batch.core.repository.JobRepository;
 import org.springframework.batch.core.step.builder.StepBuilder;
-import org.springframework.batch.item.ItemReader;
 import org.springframework.batch.item.ItemWriter;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.core.io.ClassPathResource;
-import org.springframework.core.io.Resource;
+import org.springframework.context.annotation.Lazy;
 import org.springframework.transaction.PlatformTransactionManager;
 
-import java.io.IOException;
-import java.util.zip.GZIPInputStream;
+import java.util.Arrays;
+import java.util.List;
+import java.util.Objects;
 
 @Configuration
 @Slf4j
 public class BatchConfiguration {
+    @Autowired
+    public TitleBasicsMapper titleBasicsMapper;
 
-    @Value("${app.datasets.titleBasics.file}")
-    private String fileInput;
+    @Autowired
+    public NameBasicsMapper nameBasicsMapper;
 
-    @Value("${app.datasets.titleBasics.headers}")
-    private String[] headers;
+    @Bean("titleBasicsStep")
+    public Step createTitleBasicsStep() {
+        List<String> headers = Arrays.stream(TitleBasicsHeader.values()).map(Objects::toString).toList();
+        return new StepBuilder("titleBasicsStep", jobRepository).chunk(chunkSize, transactionManager).transactionManager(transactionManager).reader(datasetReaderFactory.create("title.basics.tsv.gz", titleBasicsMapper, headers)).writer(writer).build();
+    }
 
-    @Value("${app.datasets.titleBasics.dto_class}")
-    private Class titleBasicsClass;
+    @Bean("nameBasicsStep")
+    public Step createNameBasicsStep() {
+        List<String> headers = Arrays.stream(NameBasicsHeader.values()).map(Objects::toString).toList();
+        return new StepBuilder("nameBasicsStep", jobRepository).chunk(chunkSize, transactionManager).transactionManager(transactionManager).reader(datasetReaderFactory.create("name.basics.tsv.gz", nameBasicsMapper, headers)).writer(writer).build();
+    }
+
+    // Todo: Should only be a workaround
+    @Autowired
+    @Lazy
+    List<Step> steps;
+
+    @Autowired
+    JobRepository jobRepository;
+
+    @Autowired
+    PlatformTransactionManager transactionManager;
+
+    @Autowired
+    DatasetReaderFactory datasetReaderFactory;
 
     @Value("${app.chunk_size}")
     private int chunkSize;
 
-    @Bean
-    public ItemWriter<TitleBasics> writer() {
-        return new LogWriter<>();
-    }
+    @Autowired
+    public ItemWriter<Object> writer;
 
     @Bean
-    public Job importDatasetsJob(JobRepository jobRepository, JobExecutionListener listener, Step step1) {
+    public Job importDatasetsJob(JobRepository jobRepository, JobExecutionListener listener) {
         log.debug("Configuring job 'importDatasetsJob");
-        return new JobBuilder("importDatasetsJob", jobRepository)
-                .incrementer(new RunIdIncrementer())
-                .listener(listener)
-                .flow(step1)
-                .end()
-                .build();
-    }
 
-    @Bean
-    public Step step1(JobRepository jobRepository, PlatformTransactionManager transactionManager) {
-        log.debug("Configuring step 'step1'");
-        return new StepBuilder("step1", jobRepository)
-                .<CSVRecord, TitleBasics>chunk(chunkSize)
-                .transactionManager(transactionManager)
-                .reader(createReader(fileInput))
-                .processor(new MapperProcessor<CSVRecord, TitleBasics>(new TitleBasicsMapper()))
-                .writer(writer())
-                .build();
-    }
+        JobBuilder jobBuilder = new JobBuilder("importDatasetsJob", jobRepository).incrementer(new RunIdIncrementer()).listener(listener);
 
-    private <T extends Enum<T>> ItemReader<CSVRecord> createReader(String filename) {
-        log.debug("Create Reader from file {}", filename);
-        Resource resource = new ClassPathResource(filename);
-        try {
-            CSVRecordReader itemReader = CSVRecordReader.builder(new GZIPInputStream(resource.getInputStream())).csvFormat(getDefaultCSVFormat()).build();
-            return itemReader;
-        } catch (IOException e) {
-            throw new RuntimeException(e);
+
+        // TODO: Ugly!
+        Step firstStep = steps.get(0);
+        SimpleJobBuilder simpleJobBuilder = jobBuilder.start(firstStep);
+        if (steps.size() > 1) {
+            for (Step step : steps.subList(1, steps.size())) {
+                simpleJobBuilder.next(step);
+            }
         }
+
+        return simpleJobBuilder.build();
     }
 
-    private <T extends Enum<T>> CSVFormat getDefaultCSVFormat() {
-        return CSVFormat.DEFAULT.builder()
-                .setDelimiter('\t')
-                .setQuote(null)
-                .setSkipHeaderRecord(true)
-                .setHeader(headers)
-                .build();
-    }
 }

@@ -14,6 +14,7 @@
         <lombok.version>1.18.26</lombok.version>
         <apache-commons-csv.version>1.10.0</apache-commons-csv.version>
         <apache-commons-lang3.version>3.12.0</apache-commons-lang3.version>
+        <hibernate.version>8.0.0.Final</hibernate.version>
         <slf4j.version>2.0.7</slf4j.version>
         <postgresql.version>42.6.0</postgresql.version>
         <junit5.version>5.9.2</junit5.version>
@@ -49,6 +50,12 @@
                 <groupId>org.apache.commons</groupId>
                 <artifactId>commons-lang3</artifactId>
                 <version>${apache-commons-lang3.version}</version>
+            </dependency>
+
+            <dependency>
+                <groupId>org.hibernate.validator</groupId>
+                <artifactId>hibernate-validator</artifactId>
+                <version>${hibernate.version}</version>
             </dependency>
 
             <dependency>

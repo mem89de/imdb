@@ -42,6 +42,10 @@
             <artifactId>postgresql</artifactId>
             <scope>runtime</scope>
         </dependency>
+        <dependency>
+            <groupId>org.hibernate.validator</groupId>
+            <artifactId>hibernate-validator</artifactId>
+        </dependency>
     </dependencies>
 
     <build>
@@ -58,6 +62,18 @@
                         </goals>
                         <configuration>
                             <url>http://localhost:8001/repository/imdb-datasets/title.basics.tsv.gz</url>
+                            <toDir>${project.build.directory}/classes</toDir>
+                            <skipIfExists>true</skipIfExists>
+                        </configuration>
+                    </execution>
+                    <execution>
+                        <id>download-name-basics-dataset</id>
+                        <phase>generate-resources</phase>
+                        <goals>
+                            <goal>download-single</goal>
+                        </goals>
+                        <configuration>
+                            <url>http://localhost:8001/repository/imdb-datasets/name.basics.tsv.gz</url>
                             <toDir>${project.build.directory}/classes</toDir>
                             <skipIfExists>true</skipIfExists>
                         </configuration>

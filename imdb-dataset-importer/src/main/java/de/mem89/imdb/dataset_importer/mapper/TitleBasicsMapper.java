@@ -1,31 +1,27 @@
 package de.mem89.imdb.dataset_importer.mapper;
 
 import de.mem89.imdb.dataset_importer.dto.TitleBasics;
-import static de.mem89.imdb.dataset_importer.headers.TitleBasicsHeader.*;
-
+import de.mem89.imdb.dataset_importer.headers.TitleBasicsHeader;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.csv.CSVRecord;
+import org.springframework.stereotype.Component;
 import org.springframework.util.StringUtils;
 
 import java.util.Arrays;
 import java.util.Collection;
 
-@Slf4j
-public class TitleBasicsMapper implements Mapper<CSVRecord,TitleBasics> {
-    private static final String EMPTY_CELL = "\\N";
-    public TitleBasics map(CSVRecord csvRecord) {
-        if(csvRecord == null) {
-            log.warn("Object to map is null");
-            return null;
-        }
 
+@Slf4j
+@Component("titleBasicsMapper")
+public class TitleBasicsMapper extends AbstractCSVRecordMapper {
+    TitleBasics mapNonNull(CSVRecord csvRecord) {
         return TitleBasics.builder()
-                .tconst(csvRecord.get(tconst))
-                .titleType(csvRecord.get(titleType))
-                .primaryTitle(csvRecord.get(primaryTitle))
-                .originalTitle(csvRecord.get(originalTitle))
-                .isAdult(Integer.valueOf(csvRecord.get(isAdult)) == 0)
-                .startYear(csvRecord.get(startYear))
+                .tconst(csvRecord.get(TitleBasicsHeader.tconst))
+                .titleType(csvRecord.get(TitleBasicsHeader.titleType))
+                .primaryTitle(csvRecord.get(TitleBasicsHeader.primaryTitle))
+                .originalTitle(csvRecord.get(TitleBasicsHeader.originalTitle))
+                .isAdult(Integer.valueOf(csvRecord.get(TitleBasicsHeader.isAdult)) == 0)
+                .startYear(csvRecord.get(TitleBasicsHeader.startYear))
                 .endYear(extractEndYear(csvRecord))
                 .runtimeMinutes(extractRuntimeInMinutes(csvRecord))
                 .genres(extractGenres(csvRecord))
@@ -33,25 +29,27 @@ public class TitleBasicsMapper implements Mapper<CSVRecord,TitleBasics> {
     }
 
     private String extractEndYear(CSVRecord csvRecord) {
-        String endYearValue = csvRecord.get(endYear);
+        String endYearValue = csvRecord.get(TitleBasicsHeader.endYear);
         return isEmptyCell(endYearValue) ? null : endYearValue;
     }
 
     private String extractRuntimeInMinutes(CSVRecord csvRecord) {
-        String runtimeMinutesValue = csvRecord.get(runtimeMinutes);
+        String runtimeMinutesValue = csvRecord.get(TitleBasicsHeader.runtimeMinutes);
         return isEmptyCell(runtimeMinutesValue) ? null : runtimeMinutesValue;
     }
 
     private Collection<String> extractGenres(CSVRecord csvRecord) {
-        String[] genresArray = StringUtils.tokenizeToStringArray(csvRecord.get(genres), ",");
+        String[] genresArray = StringUtils.tokenizeToStringArray(csvRecord.get(TitleBasicsHeader.genres), ",");
         return Arrays.stream(genresArray).toList();
     }
 
     private boolean isEmptyCell(String cell) {
-        if(!StringUtils.hasText(cell)) {
+        if (!StringUtils.hasText(cell)) {
             return false;
         }
 
         return !EMPTY_CELL.equals(cell);
     }
+
+
 }
