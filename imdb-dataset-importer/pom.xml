@@ -55,6 +55,30 @@
                 <artifactId>wagon-maven-plugin</artifactId>
                 <executions>
                     <execution>
+                        <id>download-name-basics-dataset</id>
+                        <phase>generate-resources</phase>
+                        <goals>
+                            <goal>download-single</goal>
+                        </goals>
+                        <configuration>
+                            <url>http://localhost:8001/repository/imdb-datasets/name.basics.tsv.gz</url>
+                            <toDir>${project.build.directory}/classes</toDir>
+                            <skipIfExists>true</skipIfExists>
+                        </configuration>
+                    </execution>
+                    <execution>
+                        <id>download-title-akas-dataset</id>
+                        <phase>generate-resources</phase>
+                        <goals>
+                            <goal>download-single</goal>
+                        </goals>
+                        <configuration>
+                            <url>http://localhost:8001/repository/imdb-datasets/title.akas.tsv.gz</url>
+                            <toDir>${project.build.directory}/classes</toDir>
+                            <skipIfExists>true</skipIfExists>
+                        </configuration>
+                    </execution>
+                    <execution>
                         <id>download-title-basics-dataset</id>
                         <phase>generate-resources</phase>
                         <goals>
@@ -67,13 +91,49 @@
                         </configuration>
                     </execution>
                     <execution>
-                        <id>download-name-basics-dataset</id>
+                        <id>download-title-crew-dataset</id>
                         <phase>generate-resources</phase>
                         <goals>
                             <goal>download-single</goal>
                         </goals>
                         <configuration>
-                            <url>http://localhost:8001/repository/imdb-datasets/name.basics.tsv.gz</url>
+                            <url>http://localhost:8001/repository/imdb-datasets/title.crew.tsv.gzz</url>
+                            <toDir>${project.build.directory}/classes</toDir>
+                            <skipIfExists>true</skipIfExists>
+                        </configuration>
+                    </execution>
+                    <execution>
+                        <id>download-title-episode-dataset</id>
+                        <phase>generate-resources</phase>
+                        <goals>
+                            <goal>download-single</goal>
+                        </goals>
+                        <configuration>
+                            <url>http://localhost:8001/repository/imdb-datasets/title.episode.tsv.gz</url>
+                            <toDir>${project.build.directory}/classes</toDir>
+                            <skipIfExists>true</skipIfExists>
+                        </configuration>
+                    </execution>
+                    <execution>
+                        <id>download-title-principals-dataset</id>
+                        <phase>generate-resources</phase>
+                        <goals>
+                            <goal>download-single</goal>
+                        </goals>
+                        <configuration>
+                            <url>http://localhost:8001/repository/imdb-datasets/title.principals.tsv.gz</url>
+                            <toDir>${project.build.directory}/classes</toDir>
+                            <skipIfExists>true</skipIfExists>
+                        </configuration>
+                    </execution>
+                    <execution>
+                        <id>download-title-ratings-dataset</id>
+                        <phase>generate-resources</phase>
+                        <goals>
+                            <goal>download-single</goal>
+                        </goals>
+                        <configuration>
+                            <url>http://localhost:8001/repository/imdb-datasets/title.ratings.tsv.gz</url>
                             <toDir>${project.build.directory}/classes</toDir>
                             <skipIfExists>true</skipIfExists>
                         </configuration>

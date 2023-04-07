@@ -38,13 +38,21 @@ public class BatchConfiguration {
     @Bean("titleBasicsStep")
     public Step createTitleBasicsStep() {
         List<String> headers = Arrays.stream(TitleBasicsHeader.values()).map(Objects::toString).toList();
-        return new StepBuilder("titleBasicsStep", jobRepository).chunk(chunkSize, transactionManager).transactionManager(transactionManager).reader(datasetReaderFactory.create("title.basics.tsv.gz", titleBasicsMapper, headers)).writer(writer).build();
+        return new StepBuilder("titleBasicsStep", jobRepository).chunk(chunkSize, transactionManager)
+                                                                .transactionManager(transactionManager)
+                                                                .reader(datasetReaderFactory.create("title.basics.tsv.gz", titleBasicsMapper, headers))
+                                                                .writer(writer)
+                                                                .build();
     }
 
     @Bean("nameBasicsStep")
     public Step createNameBasicsStep() {
         List<String> headers = Arrays.stream(NameBasicsHeader.values()).map(Objects::toString).toList();
-        return new StepBuilder("nameBasicsStep", jobRepository).chunk(chunkSize, transactionManager).transactionManager(transactionManager).reader(datasetReaderFactory.create("name.basics.tsv.gz", nameBasicsMapper, headers)).writer(writer).build();
+        return new StepBuilder("nameBasicsStep", jobRepository).chunk(chunkSize, transactionManager)
+                                                               .transactionManager(transactionManager)
+                                                               .reader(datasetReaderFactory.create("name.basics.tsv.gz", nameBasicsMapper, headers))
+                                                               .writer(writer)
+                                                               .build();
     }
 
     // Todo: Should only be a workaround
@@ -71,7 +79,8 @@ public class BatchConfiguration {
     public Job importDatasetsJob(JobRepository jobRepository, JobExecutionListener listener) {
         log.debug("Configuring job 'importDatasetsJob");
 
-        JobBuilder jobBuilder = new JobBuilder("importDatasetsJob", jobRepository).incrementer(new RunIdIncrementer()).listener(listener);
+        JobBuilder jobBuilder = new JobBuilder("importDatasetsJob", jobRepository).incrementer(new RunIdIncrementer())
+                                                                                  .listener(listener);
 
 
         // TODO: Ugly!
