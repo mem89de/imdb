@@ -23,15 +23,15 @@ import java.util.zip.GZIPInputStream;
 @Component
 public class DatasetReaderFactory {
 
-    public <T> DatasetReader<T> create(@NonNull String filename, @Nonnull Mapper<CSVRecord, T> mapper, @NotEmpty List<String> headers) {
+    public <T> DatasetReader<T> create(@NonNull String filename, @Nonnull Mapper<CSVRecord, T> mapper, @NotEmpty String[] headers) {
         ItemReader<CSVRecord> csvRecordItemReader = createCSVItemReader(filename, headers);
 
         return new DatasetReader<>(csvRecordItemReader, mapper);
     }
 
-    private ItemReader<CSVRecord> createCSVItemReader(@NonNull String filename, @NotEmpty Collection<String> headers) {
+    private ItemReader<CSVRecord> createCSVItemReader(@NonNull String filename, @NotEmpty String[] headers) {
         if (log.isDebugEnabled()) {
-            String headersString = headers.stream().collect(Collectors.joining(", "));
+            String headersString = String.join(", ", headers);
             log.debug("Creating {} from file {} with headers {}", CSVRecordReader.class, filename, headersString);
         }
         Resource resource = new ClassPathResource(filename);
@@ -48,12 +48,12 @@ public class DatasetReaderFactory {
         return CSVRecordReader.builder(inputStream).csvFormat(csvFormat).build();
     }
 
-    private <T extends Enum<T>> CSVFormat getDefaultCSVFormat(Collection<String> headers) {
+    private <T extends Enum<T>> CSVFormat getDefaultCSVFormat(String[] headers) {
         return CSVFormat.DEFAULT.builder()
-                .setDelimiter('\t')
-                .setQuote(null)
-                .setSkipHeaderRecord(true)
-                .setHeader(headers.toArray(new String[headers.size()]))
-                .build();
+                                .setDelimiter('\t')
+                                .setQuote(null)
+                                .setSkipHeaderRecord(true)
+                                .setHeader(headers)
+                                .build();
     }
 }

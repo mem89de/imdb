@@ -10,6 +10,6 @@ import lombok.ToString;
 public class TitleEpisode {
     private String tconst;
     private String parentTconst;
-    private int seasonNumber;
-    private int episodeNumber;
+    private Integer seasonNumber;
+    private Integer episodeNumber;
 }

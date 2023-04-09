@@ -17,10 +17,25 @@ logging:
 
 app:
   datasets:
-    titleBasics:
-      filename: title.basics.tsv.gz
-      mapperBean: titleBasicsMapper
     nameBasics:
       filename: name.basics.tsv.gz
-      mapperBean: nameBasicsMapper
+      headers: nconst, primaryName, birthYear, deathYear, primaryProfession, knownForTitles
+    titleBasics:
+      filename: title.basics.tsv.gz
+      headers: tconst, titleType, primaryTitle, originalTitle, isAdult, startYear, endYear, runtimeMinutes, genres
+    titleAkas:
+      filename: title.akas.tsv.gz
+      headers: titleId, ordering, title, region, language, types, attributes, isOriginalTitle
+    titleCrew:
+      filename: title.crew.tsv.gz
+      headers: tconst, directors, writers
+    titleEpisode:
+      filename: title.episode.tsv.gz
+      headers: tconst, parentTconst, seasonNumber, episodeNumber
+    titlePrincipals :
+      filename: title.principals.tsv.gz
+      headers: tconst, ordering, nconst, category, job, characters
+    titleRatings:
+      filename: title.ratings.tsv.gz
+      headers:  tconst, averageRating, numVotes
   chunk_size: 32768

@@ -12,5 +12,5 @@ import java.math.BigDecimal;
 public class TitleRatings {
     private String tconst;
     private BigDecimal averageRating;
-    private int numVotes;
+    private Integer numVotes;
 }

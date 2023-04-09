@@ -11,7 +11,7 @@ import java.util.List;
 @ToString
 public class TitleAkas {
     private String titleId;
-    private int ordering;
+    private Integer ordering;
     private String title;
     private String region;
     private String language;

@@ -9,7 +9,7 @@ import lombok.ToString;
 @ToString
 public class TitlePrincipals {
     private String tconst;
-    private int ordering;
+    private Integer ordering;
     private String nconst;
     private String category;
     private String job;

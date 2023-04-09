@@ -1,17 +1,14 @@
 package de.mem89.imdb.dataset_importer.mapper;
 
 import de.mem89.imdb.dataset_importer.dto.NameBasics;
-import de.mem89.imdb.dataset_importer.headers.NameBasicsHeader;
-import org.apache.commons.csv.CSVRecord;
-import org.springframework.stereotype.Component;
+import de.mem89.imdb.dataset_importer.dto.TitleBasics;
+import org.mapstruct.Mapper;
+import org.mapstruct.MappingConstants;
 
-@Component("nameBasicsMapper")
-public class NameBasicsMapper extends AbstractCSVRecordMapper<NameBasics> {
+import java.util.Map;
 
-    @Override
-    NameBasics mapNonNull(CSVRecord csvRecord) {
-        return NameBasics.builder().ncsonst(csvRecord.get(NameBasicsHeader.nconst)).build();
-    }
+@Mapper(componentModel = MappingConstants.ComponentModel.SPRING)
+public interface NameBasicsMapper extends AbstractMapper<NameBasics> {
 
-
+    NameBasics map(Map<String, String> source);
 }

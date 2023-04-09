@@ -10,10 +10,10 @@ import java.util.List;
 @Getter
 @ToString
 public class NameBasics {
-    private String ncsonst;
+    private String nconst;
     private String primaryName;
-    private int birthYear;
-    private int deathYear;
+    private Integer birthYear;
+    private Integer deathYear;
     private List<String> primaryProfession;
     private List<String> knownForTitles;
 }
