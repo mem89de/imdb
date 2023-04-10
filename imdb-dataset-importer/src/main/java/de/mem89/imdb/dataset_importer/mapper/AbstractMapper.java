@@ -8,6 +8,7 @@ import org.mapstruct.MappingConstants;
 import org.springframework.util.StringUtils;
 
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 
@@ -34,6 +35,9 @@ public interface AbstractMapper<T> extends CSVRecordMapper<T> {
         return source;
     }
     default List<String> mapList(String source) {
+        if("\\N".equals(source)) {
+            return Collections.emptyList();
+        }
         String[] asArray = StringUtils.tokenizeToStringArray(source, ",");
         return Arrays.stream(asArray).map(this::mapString).toList();
     }
