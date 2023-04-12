@@ -4,7 +4,9 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.batch.item.Chunk;
 import org.springframework.batch.item.ItemWriter;
+import org.springframework.stereotype.Component;
 
+@Component("logWriter")
 public class LogWriter<T> implements ItemWriter<T> {
     Logger logger = LoggerFactory.getLogger(LogWriter.class);
     @Override

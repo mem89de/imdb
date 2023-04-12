@@ -1,3 +1,5 @@
+package de.mem89.imdb.dataset_importer.reader;
+
 import de.mem89.imdb.dataset_importer.reader.CSVRecordReader;
 import org.apache.commons.csv.CSVFormat;
 import org.apache.commons.csv.CSVRecord;

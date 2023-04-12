@@ -13,12 +13,29 @@ logging:
   level:
     root: WARN
     "de.mem89.*": INFO
-    "de.mem89.imdb.dataset_importer.writer.LogWriter": ERROR
+    "de.mem89.imdb.dataset_importer.writer.*": DEBUG
 
 app:
   datasets:
+    nameBasics:
+      filename: name.basics.tsv.gz
+      headers: nconst, primaryName, birthYear, deathYear, primaryProfession, knownForTitles
     titleBasics:
-      file: title.basics.tsv.gz
-      dto_class: de.mem89.imdb.dataset_importer.dto.TitleBasics
+      filename: title.basics.tsv.gz
       headers: tconst, titleType, primaryTitle, originalTitle, isAdult, startYear, endYear, runtimeMinutes, genres
+    titleAkas:
+      filename: title.akas.tsv.gz
+      headers: titleId, ordering, title, region, language, types, attributes, isOriginalTitle
+    titleCrew:
+      filename: title.crew.tsv.gz
+      headers: tconst, directors, writers
+    titleEpisode:
+      filename: title.episode.tsv.gz
+      headers: tconst, parentTconst, seasonNumber, episodeNumber
+    titlePrincipals :
+      filename: title.principals.tsv.gz
+      headers: tconst, ordering, nconst, category, job, characters
+    titleRatings:
+      filename: title.ratings.tsv.gz
+      headers:  tconst, averageRating, numVotes
   chunk_size: 32768

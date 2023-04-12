@@ -22,5 +22,4 @@ public class TitleBasics {
     @Singular
     private List<String> genres;
 
-
 }
