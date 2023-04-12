@@ -41,4 +41,19 @@ public interface AbstractMapper<T> extends CSVRecordMapper<T> {
         String[] asArray = StringUtils.tokenizeToStringArray(source, ",");
         return Arrays.stream(asArray).map(this::mapString).toList();
     }
+
+    default boolean mapStringToBoolean(String source) {
+        if(!StringUtils.hasText(source)) {
+            throw new IllegalArgumentException(String.format("Can not map empty String to boolean: %s", source));
+        }
+
+        if (List.of("true", "1").contains(source.toLowerCase())) {
+            return true;
+        }
+
+        if (List.of("false", "0").contains(source.toLowerCase())) {
+            return false;
+        }
+        throw new IllegalArgumentException(String.format("Can not map String to boolean: %s", source));
+    }
 }

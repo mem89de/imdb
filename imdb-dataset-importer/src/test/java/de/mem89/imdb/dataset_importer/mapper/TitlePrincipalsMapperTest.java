@@ -1,6 +1,7 @@
 package de.mem89.imdb.dataset_importer.mapper;
 
 import com.google.common.collect.ImmutableMap;
+import de.mem89.imdb.dataset_importer.dto.TitlePrincipals;
 import de.mem89.imdb.dataset_importer.dto.TitleRatings;
 import org.apache.commons.csv.CSVRecord;
 import org.junit.jupiter.api.BeforeEach;
@@ -14,29 +15,29 @@ import java.math.BigDecimal;
 import java.util.Map;
 
 import static org.hamcrest.MatcherAssert.assertThat;
-import static org.hamcrest.Matchers.contains;
 import static org.hamcrest.Matchers.*;
 import static org.mockito.Mockito.*;
 
 @ExtendWith({MockitoExtension.class})
-public class TitleRatingsMapperTest {
+public class TitlePrincipalsMapperTest {
 
-    public static final BigDecimal EXPECTED_AVERAGE_RATING = new BigDecimal("6.5");
-    public static final BigDecimal ERROR = BigDecimal.ZERO;
-    TitleRatingsMapper mapper;
+    TitlePrincipalsMapper mapper;
     @Mock
     CSVRecord csvRecord;
 
     Map<String, String> happyPathRecord = ImmutableMap.<String, String>builder()
                                                       .put("tconst", "the-tconst")
-                                                      .put("averageRating", "6.5")
-                                                      .put("numVotes", "2604")
+                                                      .put("ordering", "6")
+                                                      .put("nconst", "the-nconst")
+                                                      .put("category", "the-category")
+                                                      .put("job", "the-job")
+                                                      .put("characters", "the-characters")
                                                       .build();
 
 
     @BeforeEach
     void beforeEach() {
-        mapper = Mockito.spy(new TitleRatingsMapperImpl());
+        mapper = Mockito.spy(new TitlePrincipalsMapperImpl());
     }
 
     @Test
@@ -45,15 +46,17 @@ public class TitleRatingsMapperTest {
         when(csvRecord.toMap()).thenReturn(happyPathRecord);
 
         // when
-        TitleRatings titleRatings = mapper.map(csvRecord);
+        TitlePrincipals titlePrincipals = mapper.map(csvRecord);
 
         // then
-        assertThat(titleRatings, is(not(nullValue())));
+        assertThat(titlePrincipals, is(not(nullValue())));
 
-        assertThat(titleRatings.getTconst(), is("the-tconst"));
-        assertThat(titleRatings.getAverageRating(), is(closeTo(EXPECTED_AVERAGE_RATING, ERROR)));
-        assertThat(titleRatings.getNumVotes(), is(2604));
-
+        assertThat(titlePrincipals.getTconst(), is("the-tconst"));
+        assertThat(titlePrincipals.getOrdering(), is(6));
+        assertThat(titlePrincipals.getNconst(), is("the-nconst"));
+        assertThat(titlePrincipals.getCategory(), is("the-category"));
+        assertThat(titlePrincipals.getJob(), is("the-job"));
+        assertThat(titlePrincipals.getCharacters(), is("the-characters"));
 
         verify(csvRecord).toMap();
         verifyNoMoreInteractions(csvRecord);
@@ -65,10 +68,10 @@ public class TitleRatingsMapperTest {
         CSVRecord csvRecord = null;
 
         // when
-        TitleRatings titleRatings = mapper.map(csvRecord);
+        TitlePrincipals titlePrincipals = mapper.map(csvRecord);
 
         // then
-        assertThat(titleRatings, is(nullValue()));
+        assertThat(titlePrincipals, is(nullValue()));
     }
 
     @Test
@@ -77,9 +80,9 @@ public class TitleRatingsMapperTest {
         Map<String, String> map = null;
 
         // when
-        TitleRatings titleRatings = mapper.map(map);
+        TitlePrincipals titlePrincipals = mapper.map(map);
 
         // then
-        assertThat(titleRatings, is(nullValue()));
+        assertThat(titlePrincipals, is(nullValue()));
     }
 }

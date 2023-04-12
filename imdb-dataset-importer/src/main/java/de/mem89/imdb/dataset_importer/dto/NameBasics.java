@@ -2,6 +2,7 @@ package de.mem89.imdb.dataset_importer.dto;
 
 import lombok.Builder;
 import lombok.Getter;
+import lombok.Singular;
 import lombok.ToString;
 
 import java.util.List;
@@ -15,5 +16,6 @@ public class NameBasics {
     private Integer birthYear;
     private Integer deathYear;
     private List<String> primaryProfession;
+    @Singular
     private List<String> knownForTitles;
 }
