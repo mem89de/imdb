@@ -12,7 +12,7 @@
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <springframework.version>6.0.7</springframework.version>
-        <spring-boot-starter-batch.version>3.0.5</spring-boot-starter-batch.version>
+        <spring-boot-starter-batch.version>3.0.6</spring-boot-starter-batch.version>
         <lombok.version>1.18.26</lombok.version>
         <apache-commons-csv.version>1.10.0</apache-commons-csv.version>
         <apache-commons-lang3.version>3.12.0</apache-commons-lang3.version>
