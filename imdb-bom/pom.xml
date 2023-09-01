@@ -24,7 +24,7 @@
         <postgresql.version>42.6.0</postgresql.version>
         <junit5.version>5.9.3</junit5.version>
         <hamcrest.version>2.2</hamcrest.version>
-        <mockito.version>5.4.0</mockito.version>
+        <mockito.version>5.5.0</mockito.version>
     </properties>
 
     <dependencyManagement>
