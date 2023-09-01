@@ -22,7 +22,7 @@
         <guava.version>32.1.2-jre</guava.version>
         <slf4j.version>2.0.7</slf4j.version>
         <postgresql.version>42.6.0</postgresql.version>
-        <junit5.version>5.9.3</junit5.version>
+        <junit5.version>5.10.0</junit5.version>
         <hamcrest.version>2.2</hamcrest.version>
         <mockito.version>5.4.0</mockito.version>
     </properties>
